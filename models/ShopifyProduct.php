@@ -33,7 +33,7 @@ class ShopifyProduct extends Model
          return true;
      }
 //Збереження продукту
-    protected function saveProduct($product, $images, $variants){
+    public function saveProduct($product, $images, $variants){
         $model = Products::find()->where(['id' => $product['id']])->one();
         if(!$model){
             $model = new Products();
@@ -52,7 +52,7 @@ class ShopifyProduct extends Model
 
     }
 //Збереження зображення
-    protected function saveImage($image){
+    public function saveImage($image){
 
         if(!empty($image)){ // перевіряємо існування зображення, якщо не існує завершуємо функцію
 
