@@ -4,7 +4,7 @@
 
 $this->title = 'My Yii Application';
 
-$listData = \yii\helpers\ArrayHelper::map($models , 'type','title' );
+$listData = \yii\helpers\ArrayHelper::map($models , 'rule','title' );
 
 ?>
 <div class="site-index">

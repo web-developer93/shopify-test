@@ -6,6 +6,7 @@ use app\models\Collections;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 
@@ -62,9 +63,14 @@ class SiteController extends Controller
     public function actionIndex()
     {
        $models = Collections::find()->all();
+        if($models === null){
+            throw new HttpException(500,'Server error');
+        }
+        else{
+            return $this->render('index', ['models' => $models]);
+        }
 
-
-        return $this->render('index', ['models' => $models]);
+       
 
     }
 

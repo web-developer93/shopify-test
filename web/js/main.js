@@ -9,7 +9,7 @@ $(document).ready(function(){
     });
 });
 
-//Отримуємо поточне значення списку і записуємо результат пошуку продуктів в блок
+//Отримуємо поточне значення списку
 function setProducts(){
     var option = $('#select-collection').val();
     var result = '';
@@ -19,24 +19,27 @@ function setProducts(){
     else{
         result = getProducts(option);
     }
-    $('#products-container').html(result);
+
 
 }
 
-//Отримуємо список продуктів колекції
+//Отримуємо список продуктів колекції і записуємо результат пошуку продуктів в блок
 function getProducts(option){
-    var result = '';
+    
     var url = $('#urlProductView').val();
     $.ajax({
         type : 'post',
         url : url,
-        async: false,
         data:{
             'typeProduct' : option
         },
         success : function (data) {
-            result = data;
+            $('#products-container').html(data);
+        },
+        error:function (data) {
+            alert('Щось пішло не так');
         }
+
     });
-    return result;
+
 }

@@ -22,6 +22,9 @@ $ajaxUrlCollect =  Url::toRoute(['/collections/save']);
              type  :  'post',
              success : function(data){
                 alert('Список продуктів успішно оновлено');
+             },
+             error : function(data){
+                 alert('Помилка, щось пішло не так');
              }
         });",
         'class' => 'btn btn-success btn-lg'
@@ -33,6 +36,9 @@ $ajaxUrlCollect =  Url::toRoute(['/collections/save']);
              type  :  'post',
               success : function(data){
                 alert('Список колекцій успішно оновлено');
+             },
+             error : function(data){
+                 alert('Помилка, щось пішло не так');
              }
         });",
         'class' => 'btn btn-success btn-lg'

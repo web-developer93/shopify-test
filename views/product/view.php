@@ -18,10 +18,10 @@ echo \yii\grid\GridView::widget([
             'label' => 'Заголовок'
         ],
         [
-            'attribute' => 'description',
+            'attribute' => 'body_html',
             'format' => 'html',
             'content' => function($data){
-                return substr($data->description,0,150) . '...';
+                return substr($data->body_html,0,150) . '...';
             },
             'label' => 'Опис'
 
@@ -29,17 +29,11 @@ echo \yii\grid\GridView::widget([
         [
             'attribute' => 'image',
             'content' => function($data){
-                return Html::img($data->image, ['width' => '100']);
+                return Html::img($data->image->src, ['width' => '100']);
             },
             'label' => 'Картинка'
         ],
-        [
-            'attribute' => 'price',
-            'content' => function($data){
-                return $data->price . '₴';
-            },
-            'label' => 'Ціна'
-        ]
+
     ]
 ]);
 ?>
