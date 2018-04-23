@@ -13,15 +13,15 @@ class CollectionsController extends \yii\web\Controller
     {
         $shopifyModel = new ShopifyExport();
         $json = $shopifyModel->getJSON('/admin/smart_collections.json');
-        echo $json;
-        if( $json != 0){   //Перевіряємо результат функції на наявність даних
+
+        if( $json != ''){   //Перевіряємо результат функції на наявність даних
              $collectionSave = new ShopifyCollection(); 
-            if($collectionSave->saveCollectionData($json)){   //Зберігаємо колекцію Shopify у БД і перевіряємо чи не повертав метод false
-                 throw new HttpException(500,'Server Error');
+            if(!$collectionSave->saveCollectionData($json)){   //Зберігаємо колекцію Shopify у БД і перевіряємо чи не повертав метод false
+                throw new HttpException(500,'Server Error');
             }
         }
         else{
-             throw new HttpException(500,'Server Error');
+            throw new HttpException(500,'Server Error');
         }
 
 

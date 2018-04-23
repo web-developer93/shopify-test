@@ -37,13 +37,13 @@ class Products extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','title', 'body_html', 'vendor', 'product_type', 'created_at', 'handle', 'updated_at', 'published_at', 'published_scope', 'variants'], 'required'],
+            [['id','title', 'body_html', 'vendor', 'product_type', 'created_at', 'handle', 'updated_at', 'published_at', 'published_scope'], 'required'],
             [['body_html'], 'string'],
             [['created_at', 'updated_at', 'published_at'], 'safe'],
             [['title', 'handle', 'template_suffix', 'published_scope', 'tags'], 'string', 'max' => 255],
             [['vendor'], 'string', 'max' => 100],
             [['product_type'], 'string', 'max' => 50],
-            [['template_suffix', 'tags', 'images'], 'safe']
+            [['template_suffix', 'tags'], 'safe']
         ];
     }
 
@@ -70,9 +70,21 @@ class Products extends \yii\db\ActiveRecord
 
 
     public function getImage(){
-        return $this->hasOne(ProductImages::className(), ['product_id' => 'id'] ); //Звязуємо продукт з картинкою
+        return $this->hasOne(ProductImages::className(), ['product_id' => 'id'] )->where(['position' => 1]); //Звязуємо продукт з картинкою
     }
-    
+
+    public function getImages(){
+        return $this->hasMany(ProductImages::className(), ['product_id' => 'id'] );
+    }
+
+    public function getVariants(){
+        return $this->hasMany(ProductVariants::className(),['product_id' => 'id']);
+    }
+
+    public function  getOptions(){
+        return $this->hasMany(ProductOptions::className(),['product_id' => 'id']);
+    }
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {

@@ -27,8 +27,11 @@ class ShopifyCollection extends Model
 //зберігання колекції
     public function saveCollection($collection){
         $model = Collections::find()->where(['id' => $collection['id']])->one();
-        if(!$model){  // превіряємо чи існує ця колекція у БД
-            $model = new Collections(); // Створюємо нову модель
+        if(isset($model)){
+            return true;
+        }
+        else{
+            $model = new Collections();
         }
         $rules = $collection['rules'];
         $image = $collection['image'];
@@ -37,30 +40,24 @@ class ShopifyCollection extends Model
        
 
         if($model->save()){
+
             $saveImage = $this->saveImageCollection($image, $model->id); //Зберігаємо картинку колекції
             return (true && $saveImage);
         }
-        else{
-            print_r($model->errors);
-        }
+        
 
         return false;
     }
-
+    
+//збереження зображення колекції
     public function saveImageCollection($image, $id){
         if(!empty($image)){ // перевіряємо існування зображення, якщо не існує завершуємо функцію
 
-            $model = CollectImage::find()->where(["id" => $id])->one();
-            if(!$model){
-                $model = new CollectImage();
-            }
+            $model = $model = new CollectImage();
             $model->attributes = $image;
             $model->id = $id;
             if($model->save()) { //зберігаємо зображення
                 return true;
-            }
-            else{
-                print_r($model->errors);
             }
 
         }

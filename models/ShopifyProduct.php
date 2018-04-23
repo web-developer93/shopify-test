@@ -19,13 +19,11 @@ class ShopifyProduct extends Model
          
          $dataArray = json_decode($data, true);
          foreach($dataArray['products'] as $product ){
-             $variants = $product['variants'];
-             $image = $product['image'];
-             $images = $product['images'];
-             unset($product['variants'],$product['images'], $product['image'], $product['options']);
-             $saveProduct = $this->saveProduct($product, $images, $variants);
-             $saveProductImage = $this->saveImage($image);
-             if(!$saveProduct && !$saveProductImage){
+
+
+             $saveProduct = $this->saveProduct($product);
+
+             if(!$saveProduct ){
                  return false;
              }
 
@@ -33,48 +31,110 @@ class ShopifyProduct extends Model
          return true;
      }
 //Збереження продукту
-    public function saveProduct($product, $images, $variants){
+    public function saveProduct($product){
         $model = Products::find()->where(['id' => $product['id']])->one();
-        if(!$model){
-            $model = new Products();
-        }
-        $model->attributes = $product;
-        $model->images = json_encode($images);
-        $model->variants = json_encode($variants);
-
-        if($model->save()){
+        if(isset($model)){
             return true;
         }
-      
+        else{
+            $model = new Products();
+        }
+        $variants = $product['variants'];
+        $options = $product['options'];
+        $images = $product['images'];
+        $model->attributes = $product;
 
-         return false;
+
+        if($model->save()){
+
+            if(!($this->saveOptions($options) && $this->saveVariants($variants) && $this->saveImages($images))){
+                return false;
+            }
+
+
+            return true ;
+        }
+        else{
+            return false;
+        }
+
+
 
 
     }
+//Перегляд масиву опцій і передача на збереження
+    public function saveOptions($options){
+        foreach ($options as $option){
+            if(!$this->saveOption($option)){
+                return false;
+            }
+        }
+        return true;
+    }
+//Перегляд масиву зображень і передача на збереження
+    public function saveImages($images){
+        foreach($images as $image){
+            if(!$this->saveImage($image)){
+                return false;
+            }
+        }
+        return true;
+    }
+//Перегляд масиву варіантів і передача на збереження
+    public function saveVariants($variants){
+        foreach ($variants as $variant){
+            if(!$this->saveVariant($variant)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 //Збереження зображення
     public function saveImage($image){
 
         if(!empty($image)){ // перевіряємо існування зображення, якщо не існує завершуємо функцію
 
-            $model = ProductImages::find()->where(['product_id' => $image['product_id']])->one();
-            if(!$model){
-                $model = new ProductImages();
-            }
+            $model = $model = new ProductImages();
+
             $model->attributes = $image;
-            if($model->save()) {
-                return true;
+            if(!$model->save()) {
+                return false;
             }
            
 
         }
-        else{
-            return true;
-        }
-
-       return false;
 
 
+       return true;
 
     }
+//Збереження варіанта
+    public function saveVariant($variant){
+        $model = new ProductVariants();
+        $model->attributes = $variant;
+        if($model->save()){
+            return true;
+        }
+        else{
+           
+            return false;
+        }
+
+    }
+//Збереження опцій
+    public function saveOption($option){
+        $model = new ProductOptions();
+        $model->attributes = $option;
+        $model->values = json_encode($option['values']);
+        if($model->save()){
+            return true;
+        }
+        else{
+
+            return false;
+        }
+    }
+
 
 }

@@ -67,6 +67,7 @@ class SiteController extends Controller
             throw new HttpException(500,'Server error');
         }
         else{
+            
             return $this->render('index', ['models' => $models]);
         }
 

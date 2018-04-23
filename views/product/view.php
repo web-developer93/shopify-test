@@ -29,10 +29,12 @@ echo \yii\grid\GridView::widget([
         [
             'attribute' => 'image',
             'content' => function($data){
+
                 return Html::img($data->image->src, ['width' => '100']);
             },
             'label' => 'Картинка'
         ],
+
 
     ]
 ]);
